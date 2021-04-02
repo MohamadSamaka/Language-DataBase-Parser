@@ -16,11 +16,12 @@ class Parser:
         self.SuperSubParser = self.parser.add_subparsers(dest = "command")
         self.ListSubParser = self.SuperSubParser.add_parser("list", help="Lists The Options Of Argument/s")
         self.AppSubParser = self.SuperSubParser.add_parser("app", help="The Actual Program")
-        self.SuperActionsSubParser = self.AppSubParser.add_subparsers(dest = "command")
-        self.ActionsSubParser = [self.SuperActionsSubParser.add_parser("add", help="Adding Data."),
+        self.SuperActionsSubParser = self.AppSubParser.add_subparsers(dest = "command", help="Possible Actions")
+        self.ActionsSubParser = [self.SuperActionsSubParser.add_parser("add", help="Adding Data.", ),
                                 self.SuperActionsSubParser.add_parser("edit", help="Edditing Data."),
                                 self.SuperActionsSubParser.add_parser("delete", help="Delete Colunm."),
                                 self.SuperActionsSubParser.add_parser("select", help="Showing Data.")]
+        self.test = self.ActionsSubParser[0].add_subparsers(dest = "command")
 
     def AddPositionalArgs(self):
         self.ListSubParserArgs()

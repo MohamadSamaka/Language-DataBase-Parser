@@ -11,3 +11,8 @@ class Program:
             print("File Closed Successfuly!")
     
 
+
+# if __name__ == "__main__":
+#     P = Parser(sys.argv[1:])
+#     P.AfterParseArgs()
+

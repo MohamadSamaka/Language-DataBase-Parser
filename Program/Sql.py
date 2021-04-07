@@ -9,10 +9,3 @@ class Program:
             print("[-] Error in Connection: ", e)
     def __del__(self):
             print("File Closed Successfuly!")
-    
-
-
-# if __name__ == "__main__":
-#     P = Parser(sys.argv[1:])
-#     P.AfterParseArgs()
-

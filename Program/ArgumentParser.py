@@ -8,7 +8,6 @@ class Parser:
         self.Str_Input = Str_Input
         self.EditInput()
         self.MainParser = argparse.ArgumentParser(description='Language DataBase', usage=UsageMassage())
-        # self.MainParser = argparse.ArgumentParser(description='Language DataBase')
         self.ActionsSuperParser = None
         self.ActionsSubParser = None
         self.MainParserArgMaker()

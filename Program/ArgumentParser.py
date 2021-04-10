@@ -34,7 +34,7 @@ class Parser:
 
 
     def AddParserArgs(self):
-        self.ActionsSubParser[0].add_argument("Word", help="Provide The Key Word")
+        self.ActionsSubParser[0].add_argument("word", help="Provide The Key Word")
         self.ActionsSubParser[0].add_argument("-m", "--meaning", help="Provides a Meaning")
         self.ActionsSubParser[0].add_argument("-d", "--desc", help="Provides Description")
         self.ActionsSubParser[0].add_argument("-v", "--voiceId", help="Provides Voice Id", action="store_true")
@@ -57,15 +57,17 @@ class Parser:
         self.ActionsSubParser[3].add_argument("-i", "--id", type=int, help="Provide The *Id* Of The Required Column That Needs To Be Selected")
         self.ActionsSubParser[3].add_argument("-w", "--word", help="Provide The *Word* Of The Required Column That Needs To Be Selected")
         self.ActionsSubParser[3].add_argument("-v", "--voiceId", type=int, help="Provide The *Voice Id* Of The Required Column That Needs To Be Selected")
+        self.ActionsSubParser[3].add_argument("-a", "--all", help="Shows All The Available Data", action="store_true")
 
 
     def Check(self, flag = None):
         if(flag == 1):
-            if len([x for x in (self.Args.id,self.Args.word,self.Args.VoiceId) if x is not None]) == 3 or len([x for x in (self.Args.id,self.Args.word,self.Args.VoiceId) if x is not None]) == 2:
-                print('[-] Only ONE of These Should Be Gived: --id / --word / --VoiceId')
+            L = len([x for x in (self.Args.id,self.Args.word,self.Args.voiceId) if x is not None])
+            if (L == 3 or L == 2) or (L == 3 and self.Args.all) or (L == 2 and self.Args.all) :
+                print('[-] Only ONE of These Should Be Gived: --id / --word / --VoiceId/ --all')
                 exit()
-            elif len([x for x in (self.Args.id,self.Args.word,self.Args.VoiceId) if x is not None]) == 0:
-                print('[-] ONE of These Must Be Gived:: --id / --word / --VoiceId')
+            elif len([x for x in (self.Args.id,self.Args.word,self.Args.voiceId) if x is not None]) == 0:
+                print('[-] ONE of These Must Be Gived:: --id / --word / --VoiceId / --all')
                 exit()
         elif(flag == 2):
             if len([x for x in (self.Args.id,self.Args.word) if x is not None]) == 2:
@@ -87,7 +89,6 @@ class Parser:
             self.Check(3)
         elif self.Args and self.Args.Action == "select":
             self.Check(1)
-        print(self.Args)
 
 
 def UsageMassage():

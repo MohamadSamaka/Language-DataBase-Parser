@@ -7,7 +7,6 @@ class Program:
             self.conn = sqlite3.connect(con_string)
             self.C = self.conn.cursor()
             self.Args = Args
-            print(self.Args)
             print("[+] Connected To Database")
             print("-"*50)
             self.CheckAction()
@@ -15,9 +14,9 @@ class Program:
             print("[-] Error in Connection: ", e)
 
 
-    def __del__(self):
-            self.conn.close()
-            print("File Closed Successfuly!")
+    # def __del__(self):
+    #         self.conn.close()
+    #         print("File Closed Successfuly!")
 
 
     def CheckAction(self):
@@ -35,7 +34,8 @@ class Program:
             StringCommand = "DELETE FROM {} WHERE {} = {};".format(L, values[0], values[1])
             pass
         elif A == "select":
-            StringCommand = "SELECT * FROM {} WHERE id = 5;".format(L)
+            values = self.SelecetCommandMaker()
+            StringCommand = "SELECT * FROM {} {} {};".format(L, values[0], values[1])
         self.Excecuter(StringCommand)
 
     
@@ -92,14 +92,21 @@ class Program:
 
     
     def SelecetCommandMaker(self):
-        pass
+        if(self.Args.all):
+            return ["",""]
+        elif(self.Args.id):
+            return ["WHERE Id = ", self.Args.id]
+        elif(self.Args.word):
+            return ["WHERE Word = ", self.Args.word]
+        elif(self.Args.voiceId):
+            return ["WHERE \"Voice ID\" = ", self.Args.voiceId]
 
 
     def Excecuter(self, str):
-        print(str)
+        print(self.Args)
         self.C.execute(str)
-        print(self.C.fetchall())
-        # if self.Args.:
-        #     print(self.C.fetchall())
+        if self.Args:
+            print(self.C.fetchall())
         self.conn.commit()
+        print("[+] Command has been executed successfully!")
 

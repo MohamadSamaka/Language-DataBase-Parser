@@ -45,7 +45,7 @@ class Parser:
         self.ActionsSubParser[1].add_argument("-w", "--word", help="Edit Word")
         self.ActionsSubParser[1].add_argument("-m", "--meaning", help="Edit Meaning")
         self.ActionsSubParser[1].add_argument("-d", "--desc", help="Edit Description")
-        self.ActionsSubParser[1].add_argument("-v", "--voiceId", type=int, help="Edit Voice Id")
+        self.ActionsSubParser[1].add_argument("-v", "--voiceId", help="Edit Voice Id")
     
 
     def DeleteParserArgs(self):
@@ -56,24 +56,24 @@ class Parser:
     def SelectParserArgs(self):
         self.ActionsSubParser[3].add_argument("-i", "--id", type=int, help="Provide The *Id* Of The Required Column That Needs To Be Selected")
         self.ActionsSubParser[3].add_argument("-w", "--word", help="Provide The *Word* Of The Required Column That Needs To Be Selected")
-        self.ActionsSubParser[3].add_argument("-v", "--voiceId", type=int, help="Provide The *Voice Id* Of The Required Column That Needs To Be Selected")
+        self.ActionsSubParser[3].add_argument("-v", "--voiceId", help="Provide The *Voice Id* Of The Required Column That Needs To Be Selected")
         self.ActionsSubParser[3].add_argument("-a", "--all", help="Shows All The Available Data", action="store_true")
 
 
     def Check(self, flag = None):
         if(flag == 1):
             L = len([x for x in (self.Args.id,self.Args.word,self.Args.voiceId) if x is not None])
-            if (L == 3 or L == 2) or (L == 3 and self.Args.all) or (L == 2 and self.Args.all) :
-                print('[-] Only ONE of These Should Be Gived: --id / --word / --VoiceId/ --all')
+            if (L == 3 or L == 2) or (L == 3 and self.Args.all) or (L == 2 and self.Args.all) or (L == 1 and self.Args.all):
+                print('[-] Only ONE of These Should Be Given: --id / --word / --VoiceId/ --all')
                 exit()
-            elif len([x for x in (self.Args.id,self.Args.word,self.Args.voiceId) if x is not None]) == 0:
+            elif len([x for x in (self.Args.id,self.Args.word,self.Args.voiceId, self.Args.all) if x is None]) == 0:
                 print('[-] ONE of These Must Be Gived:: --id / --word / --VoiceId / --all')
                 exit()
         elif(flag == 2):
             if len([x for x in (self.Args.id,self.Args.word) if x is not None]) == 2:
                 print('[-] Either --id OR --word must be given not both!')
                 exit()
-            elif len([x for x in (self.Args.id,self.Args.word) if x is not None]) == 0:
+            elif len([x for x in (self.Args.id,self.Args.word) if x is None]) == 0:
                 print('[-] --id OR --word must be given')
                 exit()
         elif(flag == 3):

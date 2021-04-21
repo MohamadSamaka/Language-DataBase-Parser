@@ -1,5 +1,6 @@
 import sqlite3
 import random
+from tabulate import tabulate
 class Program:
     def __init__(self, con_string, Args):
         try:
@@ -7,16 +8,16 @@ class Program:
             self.conn = sqlite3.connect(con_string)
             self.C = self.conn.cursor()
             self.Args = Args
-            print("[+] Connected To Database")
-            print("-"*50)
+            # print("[+] Connected To Database")
+            # print("-"*50)
             self.CheckAction()
         except sqlite3.Error as e:
             print("[-] Error in Connection: ", e)
 
 
-    # def __del__(self):
-    #         self.conn.close()
-    #         print("File Closed Successfuly!")
+    def __del__(self):
+            self.conn.close()
+            # print("File Closed Successfuly!")
 
 
     def CheckAction(self):
@@ -34,8 +35,8 @@ class Program:
             StringCommand = "DELETE FROM {} WHERE {} = {};".format(L, values[0], values[1])
             pass
         elif A == "select":
-            values = self.SelecetCommandMaker()
-            StringCommand = "SELECT * FROM {} {} {};".format(L, values[0], values[1])
+            values = self.SelectCommandMaker()
+            StringCommand = "SELECT * FROM {} {} '{}';".format(L, values[0], values[1])
         self.Excecuter(StringCommand)
 
     
@@ -81,17 +82,30 @@ class Program:
 
     def DeleteCommandMaker(self):
         p = self.Args
+        T = self.Args.Language
         args = []
         if p.id:
             args.append("id")
             args.append("'{}'".format(p.id))
+            if self.C.execute("SELECT EXISTS(SELECT 1 FROM {} WHERE Id='{}' LIMIT 1);".format(T,p.id)).fetchone()[0] == 1:
+                self.AutoIncrementChanger()
+            else:
+                print("[-] This ID Dosen't Exist!")
+                self.__del__()
+                exit()
         elif p.word:
             args.append("word")
             args.append("'{}'".format(p.word))
+            if self.C.execute("SELECT EXISTS(SELECT 1 FROM {} WHERE Word='{}' LIMIT 1);".format(T,p.word)).fetchone()[0] == 1:
+                self.AutoIncrementChanger()
+            else:
+                print("[-] This Word Dosen't Exist!")
+                self.__del__()
+                exit()
         return args
 
     
-    def SelecetCommandMaker(self):
+    def SelectCommandMaker(self):
         if(self.Args.all):
             return ["",""]
         elif(self.Args.id):
@@ -102,11 +116,21 @@ class Program:
             return ["WHERE \"Voice ID\" = ", self.Args.voiceId]
 
 
+    def AutoIncrementChanger(self):
+        CurrentAutoIncrementVal = self.C.execute("SELECT seq FROM sqlite_sequence;").fetchone()[0]
+        if CurrentAutoIncrementVal > 0:
+            self.C.execute("UPDATE sqlite_sequence SET seq = {}".format(CurrentAutoIncrementVal - 1))
+
+
     def Excecuter(self, str):
-        print(self.Args)
         self.C.execute(str)
-        if self.Args:
-            print(self.C.fetchall())
+        if self.Args.Action == "select":
+            print(tabulate(self.C.fetchall(), headers=["ID" ,"Word","Meaning", "Description", "Voice ID"]))
         self.conn.commit()
-        print("[+] Command has been executed successfully!")
+        # SuccessMssg()
+        # print("[+] Command has been executed successfully!")
+
+    # def SuccessMssg(self):
+    #     A = self.Args.Action
+    #     if(A == d)
 
